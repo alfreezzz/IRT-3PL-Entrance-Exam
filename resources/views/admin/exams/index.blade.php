@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Subtes')
+@section('title', 'Ujian')
 
 @section('content')
 <x-page-header 
-    title="Subtes"
-    subtitle="Kelola daftar subtes untuk setiap tahun ajaran"
-    action-label="Tambah Subtes"
+    title="Ujian"
+    subtitle="Kelola daftar ujian untuk setiap tahun ajaran"
+    action-label="Tambah Ujian"
     :action-url="route('exams.create')"
 />
 
@@ -51,7 +51,7 @@
         'showUrl' => route('exams.show', $item->id),
         'editUrl' => route('exams.edit', $item->id),
         'deleteUrl' => route('exams.destroy', $item->id),
-        'deleteMessage' => 'Yakin ingin menghapus subtes ini?',
+        'deleteMessage' => 'Yakin ingin menghapus ujian ini?',
     ])->render();
 @endphp
 
@@ -59,6 +59,6 @@
     :items="$exams"
     :columns="$columns"
     :actions="$actions"
-    emptyMessage="Tidak ada subtes"
+    emptyMessage="Tidak ada ujian"
 />
 @endsection

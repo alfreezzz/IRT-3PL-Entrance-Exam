@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Subtes')
+@section('title', 'Detail Ujian')
 
 @section('content')
 <x-page-header
-    title="Detail Subtes"
+    title="Detail Ujian"
     subtitle="Informasi lengkap subtes"
-    action-label="Edit Subtes"
+    action-label="Edit Ujian"
     :action-url="route('exams.edit', $exam->id)"
 />
 
@@ -50,7 +50,7 @@
                 <p class="text-slate-900 dark:text-white">{{ $exam->duration }} menit</p>
             </div>
             <div>
-                <p class="text-sm text-slate-500">Subtes Dibuat</p>
+                <p class="text-sm text-slate-500">Ujian Dibuat</p>
                 <p class="text-slate-900 dark:text-white">{{ $exam->created_at->timezone('Asia/Jakarta')->format('d M Y, H:i') }}</p>
             </div>
         </div>
@@ -79,8 +79,12 @@
                 'render' => fn($item) => \Illuminate\Support\Str::limit($item->question_text, 80),
             ],
             [
+                'label' => 'Tipe Soal',
+                'render' => fn($item) => str_replace('_', ' ', ucfirst($item->question_type)),
+            ],
+             [
                 'label' => 'Pilihan',
-                'render' => fn($item) => $item->options->count() ,
+                'render' => fn($item) => $item->options->count() > 0 ? $item->options->count() : '-',
             ],
         ];
 

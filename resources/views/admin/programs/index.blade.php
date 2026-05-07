@@ -28,7 +28,7 @@
         ],
         [
             'label' => 'Subtes Terdaftar',
-            'render' => fn($program) => $program->program_exam_weights_count,
+            'render' => fn($program) => $program->program_subtest_weights_count,
         ],
         [
             'label' => 'Aktif',

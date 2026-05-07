@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('subtests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
-            $table->longText('question_text');
-            $table->boolean('is_essay')->default(false);
-            $table->string('answer_key')->nullable(); // short-answer
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('subtests');
     }
 };

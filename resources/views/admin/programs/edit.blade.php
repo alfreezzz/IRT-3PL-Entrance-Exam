@@ -43,19 +43,19 @@
             @enderror
 
             <div class="mt-6 space-y-4">
-                @foreach($exams as $exam)
+                @foreach($subtests as $subtest)
                     @php
-                        $weight = old('weights.' . $exam->id, optional($program->programExamWeights->firstWhere('exam_id', $exam->id))->weight);
+                        $weight = old('weights.' . $subtest->id, optional($program->programSubtestWeights->firstWhere('subtest_id', $subtest->id))->weight);
                     @endphp
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_180px] md:items-center">
                         <div>
-                            <p class="font-medium text-slate-700 dark:text-slate-100">{{ $exam->title . ' (' . $exam->year . ')' }}</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ $exam->description ?? 'Tidak ada deskripsi' }}</p>
+                            <p class="font-medium text-slate-700 dark:text-slate-100">{{ $subtest->name }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ $subtest->description ?? 'Tidak ada deskripsi' }}</p>
                         </div>
 
                         <x-form.input
                             label="Bobot (%)"
-                            name="weights[{{ $exam->id }}]"
+                            name="weights[{{ $subtest->id }}]"
                             type="number"
                             placeholder="0"
                             step="0.01"

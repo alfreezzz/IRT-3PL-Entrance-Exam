@@ -1,27 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Subtes')
+@section('title', 'Edit Ujian')
 
 @section('content')
-<x-form.form-card title="Edit Subtes" :backUrl="route('exams.index')">
+<x-form.form-card title="Edit Ujian" :backUrl="route('exams.index')">
     <form action="{{ route('exams.update', $exam->id) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 
-        <x-form.input
-            label="Judul"
-            name="title"
-            placeholder="Contoh: Matematika Dasar"
-            :value="old('title', $exam->title)"
+        <x-form.select
+            label="Subtes"
+            name="subtest_id"
+            :options="$subtests"
+            option-value="id"
+            option-label="name"
+            placeholder="-- Pilih Subtes --"
+            :value="old('subtest_id', $exam->subtest_id)"
             required
-        />
-
-        <x-form.textarea
-            label="Deskripsi"
-            name="description"
-            placeholder="Deskripsi singkat subtes"
-            :value="old('description', $exam->description)"
-            rows="4"
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

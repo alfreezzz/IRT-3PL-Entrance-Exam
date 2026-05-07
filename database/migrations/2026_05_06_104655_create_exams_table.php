@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('subtest_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();

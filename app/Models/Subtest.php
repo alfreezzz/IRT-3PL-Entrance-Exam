@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
-class Program extends Model
+class Subtest extends Model
 {
     use HasFactory;
 
@@ -15,21 +15,17 @@ class Program extends Model
         'name',
         'slug',
         'description',
-        'is_active',
     ];
 
-    protected function casts(): array
+    protected static function boot(): void
     {
-        return [
-            'is_active' => 'boolean',
-        ];
-    }
+        parent::boot();
 
-    public function participants(): BelongsToMany
-    {
-        return $this->belongsToMany(Participant::class, 'program_participant')
-            ->withPivot('choice_order')
-            ->withTimestamps();
+        static::creating(function ($model) {
+            if (! $model->slug) {
+                $model->slug = Str::slug($model->name);
+            }
+        });
     }
 
     public function programSubtestWeights(): HasMany

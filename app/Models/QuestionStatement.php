@@ -6,30 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProgramExamWeight extends Model
+class QuestionStatement extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'program_id',
-        'exam_id',
-        'weight',
+        'question_id',
+        'statement_text',
+        'correct_value',
+        'order',
     ];
 
     protected function casts(): array
     {
         return [
-            'weight' => 'decimal:2',
+            'correct_value' => 'boolean',
         ];
     }
 
-    public function program(): BelongsTo
+    public function question(): BelongsTo
     {
-        return $this->belongsTo(Program::class);
-    }
-
-    public function exam(): BelongsTo
-    {
-        return $this->belongsTo(Exam::class);
+        return $this->belongsTo(Question::class);
     }
 }

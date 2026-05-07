@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Exam;
+use App\Models\Subtest;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Models\ProgramExamWeight;
+use App\Models\ProgramSubtestWeight;
 
 class ProgramController extends Controller
 {
     public function index()
     {
-        $programs = Program::withCount('programExamWeights')->latest()->get();
+        $programs = Program::withCount('programSubtestWeights')->latest()->get();
 
         return view('admin.programs.index', compact('programs'));
     }
 
     public function create()
     {
-        $exams = Exam::orderBy('title')->get();
+        $subtests = Subtest::orderBy('name')->get();
 
-        return view('admin.programs.create', compact('exams'));
+        return view('admin.programs.create', compact('subtests'));
     }
 
     public function store(Request $request)
@@ -52,17 +52,17 @@ class ProgramController extends Controller
 
     public function show(Program $program)
     {
-        $program->load('programExamWeights.exam');
+        $program->load('programSubtestWeights.subtest');
 
         return view('admin.programs.show', compact('program'));
     }
 
     public function edit(Program $program)
     {
-        $exams = Exam::orderBy('title')->get();
-        $program->load('programExamWeights');
+        $subtests = Subtest::orderBy('name')->get();
+        $program->load('programSubtestWeights');
 
-        return view('admin.programs.edit', compact('program', 'exams'));
+        return view('admin.programs.edit', compact('program', 'subtests'));
     }
 
     public function update(Request $request, Program $program)
@@ -101,10 +101,10 @@ class ProgramController extends Controller
     {
         $filtered = collect($weights)
             ->filter(fn($weight) => $weight !== null && $weight !== '' && (float) $weight >= 0)
-            ->map(function ($weight, $examId) use ($program) {
+            ->map(function ($weight, $subtestId) use ($program) {
                 return [
                     'program_id' => $program->id,
-                    'exam_id' => (int) $examId,
+                    'subtest_id' => (int) $subtestId,
                     'weight' => (float) $weight,
                 ];
             })
@@ -120,9 +120,9 @@ class ProgramController extends Controller
         }
 
         // hapus dulu (biar clean seperti sync)
-        $program->programExamWeights()->delete();
+        $program->programSubtestWeights()->delete();
 
         // insert ulang
-        ProgramExamWeight::insert($filtered);
+        ProgramSubtestWeight::insert($filtered);
     }
 }

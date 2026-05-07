@@ -8,13 +8,10 @@
         @csrf
         @method('PUT')
 
-        <x-form.textarea
-            label="Teks Pilihan"
+        <x-form.editor
             name="option_text"
-            placeholder="Tuliskan teks pilihan"
+            placeholder="Tuliskan teks pilihan di sini"
             :value="old('option_text', $option->option_text)"
-            rows="4"
-            required
         />
 
         <x-form.checkbox

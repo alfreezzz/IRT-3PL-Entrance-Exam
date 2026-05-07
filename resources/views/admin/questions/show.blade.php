@@ -6,8 +6,8 @@
 <x-page-header
     title="Detail Soal"
     subtitle="Kelola pilihan jawaban dan ubah teks soal"
-    action-label="Tambah Pilihan"
-    :action-url="route('questions.options.create', $question)"
+    action-label="{{ $question->question_type === 'true_false_table' ? null : 'Tambah Pilihan' }}"
+    :action-url="$question->question_type === 'true_false_table' ? null : route('questions.options.create', $question)"
 />
 
 @if(session('success'))
@@ -35,17 +35,56 @@
                 <p class="font-medium text-slate-900 dark:text-white">{{ $exam->title }}</p>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700/50 dark:bg-slate-900">
-                <p class="text-sm text-slate-500">Tahun</p>
-                <p class="font-medium text-slate-900 dark:text-white">{{ $exam->year }}</p>
+                <p class="text-sm text-slate-500">Tipe Soal</p>
+                <p class="font-medium text-slate-900 dark:text-white">{{ str_replace('_', ' ', ucfirst($question->question_type)) }}</p>
             </div>
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700/50 dark:bg-slate-900">
-                <p class="text-sm text-slate-500">Jumlah Pilihan</p>
-                <p class="font-medium text-slate-900 dark:text-white">{{ $question->options->count() }}</p>
-            </div>
+            @if($question->question_type === 'short_answer')
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700/50 dark:bg-slate-900">
+                    <p class="text-sm text-slate-500">Kunci Jawaban</p>
+                    <p class="font-medium text-slate-900 dark:text-white">{{ $question->answer_key ?? '-' }}</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
+@if($question->question_type === 'true_false_table')
+    <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700/50 dark:bg-slate-950">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Pernyataan True/False</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Daftar pernyataan yang harus dinilai benar atau salah.</p>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            @if($question->statements->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pernyataan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jawaban Benar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                            @foreach($question->statements->sortBy('order') as $index => $statement)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{{ $index + 1 }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">{{ $statement->statement_text }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{{ $statement->correct_value ? 'Benar' : 'Salah' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <p class="text-center py-8 text-gray-500 dark:text-gray-400">Belum ada pernyataan untuk soal ini</p>
+            @endif
+        </div>
+    </div>
+@elseif ($question->question_type === 'multiple_choice' || $question->question_type === 'single_choice')
 <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700/50 dark:bg-slate-950">
     <div class="flex items-center justify-between gap-4">
         <div>
@@ -90,4 +129,5 @@
         />
     </div>
 </div>
+@endif
 @endsection

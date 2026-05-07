@@ -12,6 +12,7 @@ class Exam extends Model
     use HasFactory;
 
     protected $fillable = [
+        'subtest_id',
         'title',
         'slug',
         'description',
@@ -48,10 +49,5 @@ class Exam extends Model
     public function participants(): HasMany
     {
         return $this->hasMany(Participant::class);
-    }
-
-    public function programExamWeights(): HasMany
-    {
-        return $this->hasMany(ProgramExamWeight::class);
     }
 }

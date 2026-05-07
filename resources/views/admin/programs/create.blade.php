@@ -41,27 +41,27 @@
                 </div>
             @enderror
 
-            @if($exams->isEmpty())
+            @if($subtests->isEmpty())
                 <p class="mt-4 text-sm text-amber-500">Belum ada subtes/ujian. Tambahkan subtes terlebih dahulu.</p>
             @endif
 
             <div class="mt-6 space-y-4">
-                @foreach($exams as $exam)
+                @foreach($subtests as $subtest)
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_180px] md:items-center">
                         <div>
-                            <p class="font-medium text-slate-700 dark:text-slate-100">{{ $exam->title . ' (' . $exam->year . ')' }}</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ $exam->description ?? 'Tidak ada deskripsi' }}</p>
+                            <p class="font-medium text-slate-700 dark:text-slate-100">{{ $subtest->name }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ $subtest->description ?? 'Tidak ada deskripsi' }}</p>
                         </div>
 
                         <x-form.input
                             label="Bobot (%)"
-                            name="weights[{{ $exam->id }}]"
+                            name="weights[{{ $subtest->id }}]"
                             type="number"
                             placeholder="0"
                             step="0.01"
                             min="0"
                             max="100"
-                            :value="old('weights.' . $exam->id)"
+                            :value="old('weights.' . $subtest->id)"
                         />
                     </div>
                 @endforeach

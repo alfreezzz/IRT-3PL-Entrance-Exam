@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ItemParameter extends Model
 {
+    protected $fillable = [
+        'question_id',
+        'question_statement_id',
+        'a',
+        'b',
+        'c',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -19,5 +27,10 @@ class ItemParameter extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function questionStatement(): BelongsTo
+    {
+        return $this->belongsTo(QuestionStatement::class);
     }
 }

@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_participant', function (Blueprint $table) {
+        Schema::create('program_subtest_weights', function (Blueprint $table) {
             $table->id();
             $table->foreignId('program_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->tinyInteger('choice_order')->default(1);
+            $table->foreignId('subtest_id')->constrained()->cascadeOnDelete();
+            $table->decimal('weight', 5, 2)->default(0);
             $table->timestamps();
 
-            $table->unique(['user_id', 'choice_order']);
-            $table->unique(['user_id', 'program_id']);
+            $table->unique(['program_id', 'subtest_id']);
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_participant');
+        Schema::dropIfExists('program_subtest_weights');
     }
 };

@@ -1,26 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Subtes')
+@section('title', 'Tambah Ujian')
 
 @section('content')
-<x-form.form-card title="Tambah Subtes" :backUrl="route('exams.index')">
+<x-form.form-card title="Tambah Ujian" :backUrl="route('exams.index')">
     <form action="{{ route('exams.store') }}" method="POST" class="space-y-6">
         @csrf
 
-        <x-form.input
-            label="Judul"
-            name="title"
-            placeholder="Contoh: Matematika Dasar"
-            :value="old('title')"
+        <x-form.select
+            label="Subtes"
+            name="subtest_id"
+            :options="$subtests"
+            option-value="id"
+            option-label="name"
+            placeholder="-- Pilih Subtes --"
+            :value="old('subtest_id')"
             required
-        />
-
-        <x-form.textarea
-            label="Deskripsi"
-            name="description"
-            placeholder="Deskripsi singkat subtes"
-            :value="old('description')"
-            rows="4"
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

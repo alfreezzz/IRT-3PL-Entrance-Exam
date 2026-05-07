@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_exam_weights', function (Blueprint $table) {
+        Schema::create('question_statements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
-            $table->decimal('weight', 5, 2)->default(0);
+            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
+            $table->text('statement_text');
+            $table->boolean('correct_value')->default(false);
+            $table->unsignedTinyInteger('order')->default(1);
             $table->timestamps();
-
-            $table->unique(['program_id', 'exam_id']);
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_exam_weights');
+        Schema::dropIfExists('question_statements');
     }
 };

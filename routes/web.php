@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\SubtestController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Middleware\RoleMiddleware;
@@ -53,6 +54,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 
     Route::resource('examples', ExampleController::class);
+    Route::resource('subtests', SubtestController::class);
     Route::resource('exams', ExamController::class);
     Route::resource('exams.questions', \App\Http\Controllers\QuestionController::class);
     Route::resource('questions.options', \App\Http\Controllers\OptionController::class)->shallow();

@@ -15,7 +15,16 @@ class Question extends Model
     protected $fillable = [
         'exam_id',
         'question_text',
+        'question_type',
+        'answer_key',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'question_type' => 'string',
+        ];
+    }
 
     public function exam(): BelongsTo
     {
@@ -25,6 +34,11 @@ class Question extends Model
     public function options(): HasMany
     {
         return $this->hasMany(Option::class);
+    }
+
+    public function statements(): HasMany
+    {
+        return $this->hasMany(QuestionStatement::class);
     }
 
     public function itemParameter(): HasOne
