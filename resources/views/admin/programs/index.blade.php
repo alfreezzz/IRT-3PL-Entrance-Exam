@@ -37,6 +37,12 @@
             ])->with('slot', $program->is_active ? 'Ya' : 'Tidak')->render(),
         ],
         [
+            'label' => 'Portofolio',
+            'render' => fn($program) => view('components.badge', [
+                'color' => $program->portfolio_required ? 'amber' : 'slate',
+            ])->with('slot', $program->portfolio_required ? 'Wajib' : 'Tidak')->render(),
+        ],
+        [
             'label' => 'Tanggal Dibuat',
             'key' => 'created_at',
             'sortable' => true,

@@ -31,7 +31,7 @@
             'render' => fn($item) => substr($item->description ?? '-', 0, 50) . (strlen($item->description ?? '') > 50 ? '...' : ''),
         ],
         [
-            'label' => 'Tanggal Ditambahkan',
+            'label' => 'Tanggal Dibuat',
             'key' => 'created_at',
             'sortable' => true,
             'render' => fn($item) => $item->created_at->format('d M Y, H:i'),

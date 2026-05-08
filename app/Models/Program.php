@@ -16,12 +16,16 @@ class Program extends Model
         'slug',
         'description',
         'is_active',
+        'portfolio_required',
+        'portfolio_description',
+        'portfolio_weight',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
+            'portfolio_required' => 'boolean',
         ];
     }
 

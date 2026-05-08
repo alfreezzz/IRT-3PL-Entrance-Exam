@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subtest;
 use App\Models\Program;
+use App\Models\ProgramSubtestWeight;
+use App\Models\Subtest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Models\ProgramSubtestWeight;
 
 class ProgramController extends Controller
 {
@@ -27,27 +28,25 @@ class ProgramController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|unique:programs,slug',
-            'description' => 'nullable|string',
-            'is_active' => 'boolean',
-            'weights' => 'nullable|array',
-            'weights.*' => 'nullable|numeric|min:0|max:100',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $validated = $this->validateProgramRequest($request);
 
-        $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
+            $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
 
-        $program = Program::create([
-            'name' => $validated['name'],
-            'slug' => $validated['slug'],
-            'description' => $validated['description'] ?? null,
-            'is_active' => $request->boolean('is_active'),
-        ]);
+            $program = Program::create([
+                'name' => $validated['name'],
+                'slug' => $validated['slug'],
+                'description' => $validated['description'] ?? null,
+                'is_active' => $request->boolean('is_active'),
+                'portfolio_required' => $request->boolean('portfolio_required'),
+                'portfolio_description' => $validated['portfolio_description'] ?? null,
+                'portfolio_weight' => $validated['portfolio_weight'] ?? 0,
+            ]);
 
-        $this->syncWeights($program, $validated['weights'] ?? []);
+            $this->syncWeights($program, $validated['weights'] ?? []);
 
-        return redirect()->route('programs.index')->with('success', 'Program berhasil ditambahkan');
+            return redirect()->route('programs.index')->with('success', 'Program berhasil ditambahkan');
+        });
     }
 
     public function show(Program $program)
@@ -67,27 +66,25 @@ class ProgramController extends Controller
 
     public function update(Request $request, Program $program)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|unique:programs,slug,' . $program->id,
-            'description' => 'nullable|string',
-            'is_active' => 'boolean',
-            'weights' => 'nullable|array',
-            'weights.*' => 'nullable|numeric|min:0|max:100',
-        ]);
+        return DB::transaction(function () use ($request, $program) {
+            $validated = $this->validateProgramRequest($request);
 
-        $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
+            $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
 
-        $program->update([
-            'name' => $validated['name'],
-            'slug' => $validated['slug'],
-            'description' => $validated['description'] ?? null,
-            'is_active' => $request->boolean('is_active'),
-        ]);
+            $program->update([
+                'name' => $validated['name'],
+                'slug' => $validated['slug'],
+                'description' => $validated['description'] ?? null,
+                'is_active' => $request->boolean('is_active'),
+                'portfolio_required' => $request->boolean('portfolio_required'),
+                'portfolio_description' => $validated['portfolio_description'] ?? null,
+                'portfolio_weight' => $validated['portfolio_weight'] ?? 0,
+            ]);
 
-        $this->syncWeights($program, $validated['weights'] ?? []);
+            $this->syncWeights($program, $validated['weights'] ?? []);
 
-        return redirect()->route('programs.index')->with('success', 'Program berhasil diperbarui');
+            return redirect()->route('programs.index')->with('success', 'Program berhasil diperbarui');
+        });
     }
 
     public function destroy(Program $program)
@@ -112,10 +109,11 @@ class ProgramController extends Controller
             ->all();
 
         $total = array_sum(array_column($filtered, 'weight'));
+        $expectedTotal = max(0, 100.00 - (float) $program->portfolio_weight);
 
-        if (count($filtered) > 0 && round($total, 2) !== 100.00) {
+        if (count($filtered) > 0 && round($total, 2) !== round($expectedTotal, 2)) {
             throw ValidationException::withMessages([
-                'weights' => ['Total bobot harus 100%.'],
+                'weights' => [sprintf('Total bobot subtes harus %s%%.', number_format($expectedTotal, 2))],
             ]);
         }
 
@@ -124,5 +122,47 @@ class ProgramController extends Controller
 
         // insert ulang
         ProgramSubtestWeight::insert($filtered);
+    }
+
+    protected function validateProgramRequest(Request $request): array
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|unique:programs,slug' . ($request->route('program') ? ',' . $request->route('program')->id : ''),
+            'description' => 'nullable|string',
+            'is_active' => 'boolean',
+            'portfolio_required' => 'boolean',
+            'portfolio_description' => 'nullable|string',
+            'portfolio_weight' => 'nullable|numeric|min:0|max:100',
+            'weights' => 'nullable|array',
+            'weights.*' => 'nullable|numeric|min:0|max:100',
+        ]);
+
+        $portfolioRequired = $request->boolean('portfolio_required');
+
+        if ($portfolioRequired) {
+            if (! $request->filled('portfolio_weight')) {
+                throw ValidationException::withMessages([
+                    'portfolio_weight' => ['Bobot portofolio wajib diisi ketika portofolio diaktifkan.'],
+                ]);
+            }
+        } else {
+            if ($request->filled('portfolio_description')) {
+                throw ValidationException::withMessages([
+                    'portfolio_description' => ['Deskripsi portofolio hanya boleh diisi jika portofolio diaktifkan.'],
+                ]);
+            }
+
+            if ($request->filled('portfolio_weight')) {
+                throw ValidationException::withMessages([
+                    'portfolio_weight' => ['Bobot portofolio harus kosong ketika portofolio tidak diaktifkan.'],
+                ]);
+            }
+
+            $validated['portfolio_description'] = null;
+            $validated['portfolio_weight'] = 0;
+        }
+
+        return $validated;
     }
 }
