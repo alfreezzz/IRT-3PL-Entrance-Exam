@@ -34,7 +34,7 @@ class Participant extends Model
     public function programs(): BelongsToMany
     {
         return $this->belongsToMany(Program::class, 'program_participant')
-            ->withPivot('choice_order')
+            ->withPivot('choice_order', 'portfolio_path', 'portfolio_uploaded_at')
             ->withTimestamps();
     }
 

@@ -35,11 +35,16 @@ it('cannot access admin dashboard without authentication', function () {
 it('normal user registration leads to user dashboard and denies admin access', function () {
     config(['auth.registration_enabled' => true]);
 
+    // Create a test program
+    $program = \App\Models\Program::factory()->create(['is_active' => true]);
+
     $data = [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => 'password123',
         'password_confirmation' => 'password123',
+        'program_first_choice' => $program->id,
+        'photo' => \Illuminate\Http\UploadedFile::fake()->image('photo.jpg'),
     ];
 
     $this->post('/register', $data)

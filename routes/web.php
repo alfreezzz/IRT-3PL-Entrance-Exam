@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\SubtestController;
 use App\Http\Controllers\ExamController;
-use App\Http\Controllers\ProgramController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -82,8 +81,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('notifications/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])
         ->name('notifications.mark');
     Route::patch('notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])
-        ->name('notifications.markAllRead');
-    Route::patch('mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])
         ->name('notifications.markAllRead');
 });
 

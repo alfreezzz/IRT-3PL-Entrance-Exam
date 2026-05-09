@@ -194,9 +194,23 @@
                     <div x-data="{ open: false }" class="relative">
                         <button @click="open = !open"
                             class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-                            <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full flex items-center justify-center text-sm font-bold shadow shrink-0">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                            </span>
+
+                            {{-- Avatar: gambar profil atau inisial --}}
+                            @if(auth()->user()->image)
+                                <img src="{{ asset('storage/' . auth()->user()->image) }}"
+                                    alt="{{ auth()->user()->name }}"
+                                    class="w-8 h-8 rounded-full object-cover shadow shrink-0 ring-2 ring-blue-500/30"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full items-center justify-center text-sm font-bold shadow shrink-0"
+                                    style="display:none;">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </span>
+                            @else
+                                <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full flex items-center justify-center text-sm font-bold shadow shrink-0">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </span>
+                            @endif
+
                             <div class="hidden sm:flex sm:flex-col sm:text-left">
                                 <span class="text-sm font-medium text-slate-700 dark:text-slate-300 max-w-[120px] truncate leading-tight">
                                     {{ auth()->user()->name }}

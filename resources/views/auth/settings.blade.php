@@ -75,11 +75,22 @@
         <form x-show="tab === 'profile'" x-cloak method="POST" action="{{ route('settings.update') }}" class="p-6 space-y-5">
             @csrf
 
-            {{-- Avatar Placeholder --}}
+            {{-- Avatar --}}
             <div class="flex items-center gap-4 pb-5 border-b border-slate-100 dark:border-slate-800">
-                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xl font-bold shadow">
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                </div>
+                @if($user->image)
+                    <img src="{{ Storage::url($user->image) }}"
+                        alt="{{ $user->name }}"
+                        class="w-14 h-14 rounded-full object-cover shadow ring-2 ring-blue-500/30"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 items-center justify-center text-white text-xl font-bold shadow"
+                        style="display:none;">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </span>
+                @else
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xl font-bold shadow">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                @endif
                 <div>
                     <p class="font-semibold text-slate-900 dark:text-white">{{ $user->name }}</p>
                     <p class="text-sm text-slate-500 dark:text-slate-400">{{ $user->email }}</p>
