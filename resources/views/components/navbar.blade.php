@@ -25,7 +25,7 @@
                     </a>
                 @else
                     <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                        <a href="{{ url('/') }}">{{ env('APP_NAME') }}</a>
+                        <a href="{{ url('/') }}">{{ config('app.name') }}</a>
                     </h1>
                 @endif
             </div>

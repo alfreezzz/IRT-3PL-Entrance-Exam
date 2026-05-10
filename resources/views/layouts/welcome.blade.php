@@ -39,12 +39,12 @@
                 <a href="{{ url('/') }}" class="flex items-center">
                     <img src="{{ $logo }}" alt="logo" class="h-8 w-auto">
                     {{-- <span class="ml-2 text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                        {{ env('APP_NAME') }}
+                        {{ config('app.name') }}
                     </span> --}}
                 </a>
             @else
                 <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                    {{ env('APP_NAME') }}
+                    {{ config('app.name') }}
                 </h1>
             @endif
             <div class="flex items-center gap-2">
@@ -88,7 +88,7 @@
 
     <!-- Footer -->
     <footer class="relative text-center py-6 text-sm text-slate-500 dark:text-slate-500 border-t border-slate-200 dark:border-slate-800">
-        &copy; {{ now()->year }} {{ env('APP_NAME') }}. All rights reserved.
+        &copy; {{ now()->year }} {{ config('app.name') }}. All rights reserved.
     </footer>
 
     @livewireScripts

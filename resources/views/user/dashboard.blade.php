@@ -25,7 +25,7 @@
                     <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
                     <span class="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
                 </span>
-                {{ env('APP_NAME') }}
+                {{ config('app.name') }}
             </span>
 
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight mb-2"

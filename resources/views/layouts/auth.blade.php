@@ -40,7 +40,7 @@
                 <a href="{{ url('/') }}" class="flex items-center">
                     <img src="{{ $logo }}" alt="logo" class="h-8 w-auto">
                     {{-- <span class="ml-2 text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                        {{ env('APP_NAME') }}
+                        {{ config('app.name') }}
                     </span> --}}
                 </a>
             @else
