@@ -141,9 +141,11 @@ class AuthController extends Controller
 
             $attachData = [];
 
-            // Attach program pilihan pertama
+            // Pilihan pertama - selalu include semua kolom
             $attachData[$validated['program_first_choice']] = [
                 'choice_order' => 1,
+                'portfolio_path' => $portfolioPathFirst,           // null jika tidak upload
+                'portfolio_uploaded_at' => $portfolioUploadedAtFirst, // null jika tidak upload
             ];
 
             if ($portfolioPathFirst) {
@@ -151,16 +153,13 @@ class AuthController extends Controller
                 $attachData[$validated['program_first_choice']]['portfolio_uploaded_at'] = $portfolioUploadedAtFirst;
             }
 
-            // Attach program pilihan kedua jika ada
-            if (! empty($validated['program_second_choice'])) {
+            // Pilihan kedua - selalu include semua kolom
+            if (!empty($validated['program_second_choice'])) {
                 $attachData[$validated['program_second_choice']] = [
                     'choice_order' => 2,
+                    'portfolio_path' => $portfolioPathSecond,
+                    'portfolio_uploaded_at' => $portfolioUploadedAtSecond,
                 ];
-
-                if ($portfolioPathSecond) {
-                    $attachData[$validated['program_second_choice']]['portfolio_path'] = $portfolioPathSecond;
-                    $attachData[$validated['program_second_choice']]['portfolio_uploaded_at'] = $portfolioUploadedAtSecond;
-                }
             }
 
             $user->programs()->attach($attachData);

@@ -77,7 +77,7 @@
         </label>
     @endif
     
-    <div class="editor-wrapper" x-data="{ charCount: {{ strlen(strip_tags($oldValue)) }} }">
+    <div class="editor-wrapper" x-data="{ charCount: {{ strlen(strip_tags($oldValue)) }} }" x-init="charCount = ($refs.hiddenInput?.value || '').replace(/<[^>]*>/g, '').trim().length">
         <!-- Editor Wrapper dengan styling modern -->
         <div class="border {{ $hasError ? 'border-red-500 dark:border-red-500' : 'border-slate-300 dark:border-slate-700' }} rounded-xl overflow-hidden shadow-sm transition hover:border-slate-400 dark:hover:border-slate-600 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
             
@@ -318,8 +318,9 @@
                 type="hidden" 
                 name="{{ $name }}" 
                 id="{{ $idAttr }}"
+                x-ref="hiddenInput"
                 value="{{ $oldValue }}"
-                @input="charCount = this.value.replace(/<[^>]*>/g, '').trim().length"
+                @input="charCount = ($event.target.value || '').replace(/<[^>]*>/g, '').trim().length"
             />
         </div>
 
@@ -396,33 +397,47 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Quill editor
+    const initQuill_{{ Str::slug($editorId, '_') }} = function() {
+        if (typeof Quill === 'undefined') {
+            return;
+        }
+
         const toolbarOptions = @json($toolbarConfig);
-        
-        const quill_{{ Str::slug($editorId, '_') }} = new Quill('#{{ $editorId }}', {
+        const editorElement = document.getElementById('{{ $editorId }}');
+        const hiddenInput = document.getElementById('{{ $idAttr }}');
+
+        if (!editorElement || !hiddenInput) {
+            return;
+        }
+
+        const quill_{{ Str::slug($editorId, '_') }} = new Quill(editorElement, {
             theme: 'snow',
             placeholder: '{{ $placeholder }}',
             modules: {
                 toolbar: toolbarOptions
             }
         });
-        
-        // Set initial content
-        const initialContent = document.getElementById('{{ $idAttr }}').value;
-        if (initialContent) {
-            quill_{{ Str::slug($editorId, '_') }}.root.innerHTML = initialContent;
-        }
-        
-        // Update hidden input on text change
-        quill_{{ Str::slug($editorId, '_') }}.on('text-change', function() {
+
+        const updateHiddenInput = function() {
             const html = quill_{{ Str::slug($editorId, '_') }}.root.innerHTML;
-            document.getElementById('{{ $idAttr }}').value = html;
-        });
-        
-        // Validate on form submit if required
+            hiddenInput.value = html;
+            hiddenInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+        };
+
+        if (hiddenInput.value) {
+            quill_{{ Str::slug($editorId, '_') }}.root.innerHTML = hiddenInput.value;
+        }
+
+        quill_{{ Str::slug($editorId, '_') }}.on('text-change', updateHiddenInput);
+
+        const form = hiddenInput.closest('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                updateHiddenInput();
+            });
+        }
+
         @if($required)
-        const form = document.getElementById('{{ $idAttr }}').closest('form');
         if (form) {
             form.addEventListener('submit', function(e) {
                 const content = quill_{{ Str::slug($editorId, '_') }}.getText().trim();
@@ -434,6 +449,12 @@
             });
         }
         @endif
-    });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initQuill_{{ Str::slug($editorId, '_') }});
+    } else {
+        initQuill_{{ Str::slug($editorId, '_') }}();
+    }
 </script>
 @endpush

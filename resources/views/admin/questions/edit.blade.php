@@ -9,6 +9,12 @@
         @csrf
         @method('PUT')
 
+        @if($errors->any())
+            <div class="rounded-xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20 p-4 text-sm text-red-700 dark:text-red-300">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
         <div @change="questionType = $event.target.value">
             <x-form.select
                 label="Tipe Soal"
@@ -42,7 +48,7 @@
             />
         </div>
 
-        <div x-show="questionType === 'true_false_table'" x-transition>
+        <template x-if="questionType === 'true_false_table'">
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Pernyataan (3-5 pernyataan)</h3>
@@ -111,7 +117,7 @@
                     Belum ada pernyataan. Klik "Tambah Pernyataan" untuk menambah.
                 </div>
             </div>
-        </div>
+        </template>
 
         <x-form.form-actions :cancelUrl="route('exams.show', $exam)" />
     </form>

@@ -8,6 +8,12 @@
         x-data="questionForm()">
         @csrf
 
+        @if($errors->any())
+            <div class="rounded-xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20 p-4 text-sm text-red-700 dark:text-red-300">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
         <div @change="questionType = $event.target.value">
             <x-form.select
                 label="Tipe Soal"
@@ -41,7 +47,7 @@
             />
         </div>
 
-        <div x-show="questionType === 'true_false_table'" x-transition>
+        <template x-if="questionType === 'true_false_table'">
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Pernyataan (3-5 pernyataan)</h3>
@@ -67,7 +73,7 @@
                                         :id="'statement_text_' + index"
                                         rows="3"
                                         placeholder="Tuliskan pernyataan di sini"
-                                        required
+                                        x-bind:required="questionType === 'true_false_table'"
                                         x-model="statement.statement_text"
                                         class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
                                     ></textarea>
@@ -81,7 +87,7 @@
                                         value="1"
                                         x-model="statement.correct_value"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                        required
+                                        x-bind:required="questionType === 'true_false_table'"
                                     />
                                     <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Benar</span>
                                 </label>
@@ -92,7 +98,7 @@
                                         value="0"
                                         x-model="statement.correct_value"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                        required
+                                        x-bind:required="questionType === 'true_false_table'"
                                     />
                                     <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Salah</span>
                                 </label>
@@ -110,7 +116,7 @@
                     Belum ada pernyataan. Klik "Tambah Pernyataan" untuk menambah.
                 </div>
             </div>
-        </div>
+        </template>
 
         <x-form.form-actions :cancelUrl="route('exams.show', $exam)" />
     </form>

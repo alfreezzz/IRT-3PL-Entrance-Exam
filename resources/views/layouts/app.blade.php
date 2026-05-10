@@ -6,6 +6,7 @@
     <title>@yield('title', 'Dashboard')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    @stack('styles')
     <!-- theme script must run early to prevent flash of incorrect theme -->
     <script>
         (function() {
@@ -89,55 +90,10 @@
                     alert.style.display = 'none';
                 }, 5000);
             });
-
-            // Initialize Quill editors
-            const editors = document.querySelectorAll('.editor-wrapper [id$="_editor"]');
-            editors.forEach(editor => {
-                const editorId = editor.id;
-                const inputId = editorId.replace('_editor', '');
-                const input = document.getElementById(inputId);
-                const currentValue = input ? input.value : '';
-
-                const quill = new Quill('#' + editorId, {
-                    theme: 'snow',
-                    placeholder: 'Tulis sesuatu...',
-                    modules: {
-                        toolbar: [
-                            [{ header: [1, 2, 3, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ list: 'ordered' }, { list: 'bullet' }],
-                            ['blockquote', 'code-block'],
-                            ['link', 'image'],
-                            ['clean']
-                        ]
-                    }
-                });
-
-                // Set initial value
-                if (currentValue) {
-                    quill.root.innerHTML = currentValue;
-                }
-
-                // Sync content to hidden input before form submission
-                quill.on('text-change', function() {
-                    if (input) {
-                        input.value = quill.root.innerHTML;
-                    }
-                });
-
-                // Sync on form submit
-                const forms = document.querySelectorAll('form');
-                forms.forEach(form => {
-                    form.addEventListener('submit', function() {
-                        if (input) {
-                            input.value = quill.root.innerHTML;
-                        }
-                    });
-                });
-            });
         });
     </script>
 
+    @stack('scripts')
     @livewireScripts
 </body>
 </html>
