@@ -16,6 +16,7 @@ class Program extends Model
         'slug',
         'description',
         'is_active',
+        'capacity',
         'portfolio_required',
         'portfolio_description',
         'portfolio_weight',

@@ -31,6 +31,12 @@
             'render' => fn($program) => $program->program_subtest_weights_count,
         ],
         [
+            'label' => 'Daya Tampung',
+            'key' => 'capacity',
+            'sortable' => true,
+            'render' => fn($program) => $program->capacity,
+        ],
+        [
             'label' => 'Aktif',
             'render' => fn($program) => view('components.badge', [
                 'color' => $program->is_active ? 'green' : 'red',

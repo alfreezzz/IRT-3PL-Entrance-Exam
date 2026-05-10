@@ -84,7 +84,16 @@
             ],
              [
                 'label' => 'Pilihan',
-                'render' => fn($item) => $item->options->count() > 0 ? $item->options->count() : '-',
+                'render' => function($item) {
+                    if ($item->question_type === 'short_answer') {
+                        return $item->answer_key;
+                    } elseif (in_array($item->question_type, ['single_choice', 'multiple_choice'])) {
+                        return $item->options->count() . ' pilihan';
+                    } elseif ($item->question_type === 'true_false_table') {
+                        return '-';
+                    }
+                    return '';
+                },
             ],
         ];
 

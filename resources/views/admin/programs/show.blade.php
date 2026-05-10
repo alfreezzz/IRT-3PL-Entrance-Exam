@@ -18,8 +18,8 @@
 
             <div class="mt-6 grid gap-4 sm:grid-cols-2">
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700/50 dark:bg-slate-900">
-                    <p class="text-sm text-slate-500">Slug</p>
-                    <p class="font-medium text-slate-900 dark:text-white">{{ $program->slug }}</p>
+                    <p class="text-sm text-slate-500">Daya Tampung</p>
+                    <p class="font-medium text-slate-900 dark:text-white">{{ $program->capacity }} peserta</p>
                 </div>
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700/50 dark:bg-slate-900">
                     <p class="text-sm text-slate-500">Status</p>

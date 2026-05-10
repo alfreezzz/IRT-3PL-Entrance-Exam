@@ -42,6 +42,7 @@
         <div x-show="questionType === 'short_answer'" x-transition>
             <x-form.input
                 label="Kunci Jawaban (Uraian Singkat)"
+                type="number"
                 name="answer_key"
                 placeholder="Isi hanya jika tipe soal adalah uraian singkat"
                 :value="old('answer_key', $question->answer_key)"
