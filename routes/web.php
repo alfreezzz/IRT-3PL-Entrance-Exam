@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\SubtestController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\UserExamSessionController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -89,4 +90,21 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/', function () {
         return view('user.dashboard');
     })->name('user.dashboard');
+
+    Route::get('exams/session', [UserExamSessionController::class, 'index'])
+        ->name('user.exams.session.index');
+    Route::post('exams/session/start', [UserExamSessionController::class, 'start'])
+        ->name('user.exams.session.start');
+    Route::get('exams/session/{session}', [UserExamSessionController::class, 'show'])
+        ->name('user.exams.session.show');
+    Route::get('exams/session/{session}/question/{question}', [UserExamSessionController::class, 'showQuestion'])
+        ->name('user.exams.session.question');
+    Route::post('exams/session/{session}/question/{question}/answer', [UserExamSessionController::class, 'saveAnswer'])
+        ->name('user.exams.session.save-answer');
+    Route::post('exams/session/{session}/submit', [UserExamSessionController::class, 'submit'])
+        ->name('user.exams.session.submit');
+    Route::get('exams/session/{session}/break', [UserExamSessionController::class, 'break'])
+        ->name('user.exams.session.break');
+    Route::get('exams/session/{session}/complete', [UserExamSessionController::class, 'complete'])
+        ->name('user.exams.session.complete');
 });

@@ -13,6 +13,12 @@ class Participant extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'exam_id',
+        'exam_session_id',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -29,6 +35,11 @@ class Participant extends Model
     public function exam(): BelongsTo
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function examSession(): BelongsTo
+    {
+        return $this->belongsTo(ExamSession::class);
     }
 
     public function programs(): BelongsToMany

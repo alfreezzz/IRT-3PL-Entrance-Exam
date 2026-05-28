@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasMany(Participant::class);
     }
 
+    public function examSessions(): HasMany
+    {
+        return $this->hasMany(ExamSession::class);
+    }
+
     public function programs(): BelongsToMany
     {
         return $this->belongsToMany(Program::class, 'program_participant')

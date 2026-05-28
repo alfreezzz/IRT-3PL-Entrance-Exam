@@ -51,5 +51,18 @@
             </div>
         </div>
     </div>
+
+    <div class="grid gap-5 lg:grid-cols-2 mt-10">
+        <div class="rounded-3xl border border-slate-200/70 bg-white dark:bg-slate-900 p-8 shadow-sm dark:border-slate-800">
+            <p class="text-sm uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Ujian</p>
+            <h2 class="mt-3 text-2xl font-semibold text-slate-900 dark:text-slate-100">Sesi Ujian Full Session</h2>
+            <p class="mt-4 text-slate-600 dark:text-slate-300">Mulai semua ujian yang tersedia saat ini dalam satu sesi penuh, dengan aturan full screen dan tanpa berpindah tab.</p>
+            <div class="mt-6">
+                <a href="{{ route('user.exams.session.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+                    Mulai Ujian
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
